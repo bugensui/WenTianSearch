@@ -1,0 +1,22 @@
+step1:
+在数据集上进行领域内MLM训练，得到预训练模型P
+sh run_mlm.sh
+
+step2:
+利用P在训练数据集（无难负例）上finetune得到召回模型M1
+sh run_recall_model_step0.sh
+
+step3:
+利用M1，计算基于embedding的难负例并加入训练集
+sh run_hard_neg_data.sh
+
+step3:
+利用P在训练数据集（有难负例）上finetune得到召回模型M2
+sh run_recall_model_step1.sh
+
+step4:
+利用M2和faiss，计算训练集的query召回结果，构建正负样本对，送入排序模型中训练，得到排序模型R
+sh run_prepare_rank_data.sh
+
+step5:
+利用M2计算测试集的embedding，和排序模型P打包提交
